@@ -1,0 +1,21 @@
+{
+  "uuid": "3db3b261-f835-43ec-90c0-baf75b803172", 
+  "shortName": "Block World", 
+  "longName": "Block World", 
+  "companyName": "Chris Lewis", 
+  "versionCode": 1, 
+  "versionLabel": "1.0", 
+  "watchapp": {
+    "watchface": false
+  }, 
+  "sdkVersion": "3", 
+  "targetPlatforms": [
+    "basalt"
+  ], 
+  "appKeys": {
+    "dummy": 0
+  }, 
+  "resources": {
+    "media": []
+  }
+}
