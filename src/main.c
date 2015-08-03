@@ -162,7 +162,7 @@ static bool is_near_color(GPoint origin, int z, GColor query) {
       // Check only on this level
       int checked_point = vec2i(Vec3(x, y, z));
       if(checked_point > 0) {
-        if(GColorEq(block_get_color(s_block_array[checked_point]), query)) {
+        if(block_get_color(s_block_array[checked_point]).argb == query.argb) {
           return true;
         }
       }
@@ -179,7 +179,7 @@ static bool near_this_many_of_color(GPoint origin, int z, GColor query, int num)
       // Check only on this level
       int checked_point = vec2i(Vec3(x, y, z));
       if(checked_point > 0) {
-        if(GColorEq(block_get_color(s_block_array[checked_point]), query)) {
+        if(block_get_color(s_block_array[checked_point]).argb == query.argb) {
           result++;
         }
       }
