@@ -120,7 +120,6 @@ void pge_title_push(char *title, char *select_action, char *down_action, GColor 
   if(!s_window) {
     s_window = window_create();
     window_set_click_config_provider(s_window, click_config_provider);
-    window_set_fullscreen(s_window, true);
     window_set_window_handlers(s_window, (WindowHandlers) {
       .load = window_load,
       .unload = window_unload
