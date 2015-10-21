@@ -3,13 +3,13 @@
 #include <pebble.h>
 
 #include "../main.h"
-#include "isometric/isometric.h"
+#include "../pge/modules/pge_isometric.h"
 
 typedef struct {
   Vec3 position;
   GSizeSmall size;
   GColor color;
-} __attribute__((__packed__)) Block;
+} Block;
 
 Block* block_create(Vec3 vec, GSize size, GColor color);
 

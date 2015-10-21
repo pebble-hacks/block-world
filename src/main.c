@@ -1,7 +1,7 @@
 #include <pebble.h>
 
 #include "main.h"
-#include "isometric/isometric.h"
+#include "pge/modules/pge_isometric.h"
 #include "pge/pge.h"
 #include "drawable/block.h"
 #include "drawable/cloud.h"
@@ -66,7 +66,7 @@ static void render(GContext *ctx) {
   uint16_t start = time_ms(NULL, NULL);
 #endif
 
-  isometric_begin(ctx);
+  pge_isometric_begin(ctx);
 
   // Tiles
   for(int z = 0; z < GRID_DEPTH; z++) {
@@ -84,21 +84,21 @@ static void render(GContext *ctx) {
   // Selection
   switch(s_input_mode) {
     case MODE_X:
-      isometric_draw_rect(Vec3(0, s_cursor.y * BLOCK_SIZE, (s_cursor.z + 1) * BLOCK_SIZE), GSize(GRID_WIDTH * BLOCK_SIZE, BLOCK_SIZE), GColorWhite);
+      pge_isometric_draw_rect(Vec3(0, s_cursor.y * BLOCK_SIZE, (s_cursor.z + 1) * BLOCK_SIZE), GSize(GRID_WIDTH * BLOCK_SIZE, BLOCK_SIZE), GColorWhite);
       break;
     case MODE_Y:
-      isometric_draw_rect(Vec3(s_cursor.x * BLOCK_SIZE, 0, (s_cursor.z + 1) * BLOCK_SIZE), GSize(BLOCK_SIZE, GRID_HEIGHT * BLOCK_SIZE), GColorWhite);
+      pge_isometric_draw_rect(Vec3(s_cursor.x * BLOCK_SIZE, 0, (s_cursor.z + 1) * BLOCK_SIZE), GSize(BLOCK_SIZE, GRID_HEIGHT * BLOCK_SIZE), GColorWhite);
       break;
     case MODE_Z:
-      isometric_draw_box(Vec3(s_cursor.x * BLOCK_SIZE, s_cursor.y * BLOCK_SIZE,  BLOCK_SIZE), GSize(BLOCK_SIZE, BLOCK_SIZE), (GRID_DEPTH - 1) * BLOCK_SIZE, GColorWhite);
+      pge_isometric_draw_box(Vec3(s_cursor.x * BLOCK_SIZE, s_cursor.y * BLOCK_SIZE,  BLOCK_SIZE), GSize(BLOCK_SIZE, BLOCK_SIZE), (GRID_DEPTH - 1) * BLOCK_SIZE, GColorWhite);
       break;
   }
-  isometric_draw_box(Vec3(s_cursor.x * BLOCK_SIZE, s_cursor.y * BLOCK_SIZE, s_cursor.z * BLOCK_SIZE), GSize(BLOCK_SIZE, BLOCK_SIZE), BLOCK_SIZE, GColorRed);
+  pge_isometric_draw_box(Vec3(s_cursor.x * BLOCK_SIZE, s_cursor.y * BLOCK_SIZE, s_cursor.z * BLOCK_SIZE), GSize(BLOCK_SIZE, BLOCK_SIZE), BLOCK_SIZE, GColorRed);
 
   // Box
-  isometric_draw_box(Vec3(0, 0, 0), GSize(BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT), SKY_HEIGHT, GColorLightGray);
+  pge_isometric_draw_box(Vec3(0, 0, 0), GSize(BLOCK_SIZE * GRID_WIDTH, BLOCK_SIZE * GRID_HEIGHT), SKY_HEIGHT, GColorLightGray);
 
-  isometric_finish(ctx);
+  pge_isometric_finish(ctx);
 
 #ifdef BENCHMARK
   uint16_t finish = time_ms(NULL, NULL);
@@ -335,10 +335,11 @@ void pge_init() {
   generate_world();
 
   // Set up engine
-  isometric_set_projection_offset(GPoint(70, 80));
-  isometric_set_enabled(true);
+  pge_isometric_set_projection_offset(GPoint(70, 80));
+  pge_isometric_set_enabled(true);
   pge_set_framerate(FRAME_RATE_IDLE);
-  s_main_window = pge_begin(GColorBlack, logic, render, click);
+  pge_begin(GColorBlack, logic, render, click);
+  s_main_window = pge_get_window();
 
   s_status_layer = text_layer_create(GRect(0, 0, 144, 16));
   text_layer_set_background_color(s_status_layer, GColorBlack);

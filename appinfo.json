@@ -14,7 +14,8 @@
     "sdkVersion": "3",
     "shortName": "Block World",
     "targetPlatforms": [
-        "basalt"
+        "basalt",
+        "chalk"
     ],
     "uuid": "3db3b261-f835-43ec-90c0-baf75b803172",
     "versionLabel": "1.0",

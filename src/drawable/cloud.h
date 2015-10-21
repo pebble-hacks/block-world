@@ -4,7 +4,7 @@
 
 #include "../main.h"
 #include "block.h"
-#include "isometric/isometric.h"
+#include "../pge/modules/pge_isometric.h"
 
 typedef struct {
   Block *block;

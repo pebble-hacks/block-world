@@ -1,5 +1,5 @@
 /**
- * Pebble Game Engine - A simple game engine for Pebble
+ * PGE - A simple game engine for Pebble
  *
  * Author: 
  * Chris Lewis
@@ -7,21 +7,19 @@
  * Source and example:
  * https://github.com/C-D-Lewis/pge
  *
- * Features:
- * - 30 frames per second
- * - Automatic game loop using PGELogicHandler and PGERenderHandler
- * - Customizable framerate
- * - Easy to use button events, as well as query functions
- *
  * Abstracted Pebble APIs (DO NOT REIMPLEMENT!):
  * - Clicks using a PGEClickHandler
  * - Window is managed for you
- * - main function is managed for you. Implement pge_init() and pge_deinit to use.
+ * - main() function is managed for you. Implement pge_init() and pge_deinit() for app init/deinit
+ * - If using PGE WS, the marked parts of pebble-js-app-ws.js should not be modified in the app JS file.
  */
 
 #pragma once
 
 #include <pebble.h>
+
+// Number of seconds between framerate calculations
+#define PGE_FRAMERATE_INTERVAL_S 1 
 
 /********************************** Engine ***********************************/
 
@@ -45,7 +43,7 @@ void pge_deinit();
  *
  * Note: The Click handler can be NULL to not implement
  */
-Window* pge_begin(GColor window_color, PGELogicHandler *logic_handler, PGERenderHandler *render_handler, PGEClickHandler *click_handler);
+void pge_begin(GColor window_color, PGELogicHandler *logic_handler, PGERenderHandler *render_handler, PGEClickHandler *click_handler);
 
 /**
  * Finish the game and clean up
@@ -71,3 +69,28 @@ void pge_set_background(int bg_resource_id);
  * Manually request a new frame to be rendered
  */
 void pge_manual_advance();
+
+/**
+ * Get the main game Window upon which the renderer runs
+ */
+Window* pge_get_window();
+
+/**
+ * Get the average framerate, averaged over PGE_FRAMERATE_INTERVAL_S seconds
+ */
+int pge_get_average_framerate();
+
+/**
+ * Pause rendering
+ */
+void pge_pause();
+
+/**
+ * Resume rendering
+ */
+void pge_resume();
+
+/**
+ * Get whether the engine is paused or not
+ */
+bool pge_is_paused();

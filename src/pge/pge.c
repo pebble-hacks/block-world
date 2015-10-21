@@ -12,7 +12,10 @@ static PGERenderHandler *s_render_handler;
 static PGEClickHandler *s_click_handler;
 
 static bool s_button_states[3];
-static int s_framerate;
+static bool s_is_paused;
+static int s_framerate = 1000 / 30;
+static int s_frame_counter, s_avg_framerate;
+static time_t s_last_report;
 
 // Internal prototypes
 static void game_window_load(Window *window);
@@ -32,11 +35,14 @@ int main(void) {
   pge_deinit();
 }
 
-Window* pge_begin(GColor window_color, PGELogicHandler *logic_handler, PGERenderHandler *render_handler, PGEClickHandler *click_handler) {
+void pge_begin(GColor window_color, PGELogicHandler *logic_handler, PGERenderHandler *render_handler, PGEClickHandler *click_handler) {
   s_logic_handler = logic_handler;
   s_render_handler = render_handler;
 
   s_game_window = window_create();
+#if defined(PBL_SDK_2)
+  window_set_fullscreen(s_game_window, true);
+#endif
   window_set_background_color(s_game_window, window_color);
   window_set_window_handlers(s_game_window, (WindowHandlers) {
     .load = game_window_load,
@@ -50,7 +56,6 @@ Window* pge_begin(GColor window_color, PGELogicHandler *logic_handler, PGERender
 
   // Go!
   window_stack_push(s_game_window, true);
-  return s_game_window;
 }
 
 void pge_finish() {
@@ -94,7 +99,48 @@ void pge_manual_advance() {
   layer_mark_dirty(s_canvas);
 }
 
+Window* pge_get_window() {
+  return s_game_window;
+}
+
+int pge_get_average_framerate() {
+  return s_avg_framerate;
+}
+
+void pge_pause() {
+  if(!s_is_paused){
+    s_is_paused = true;
+
+    if(s_render_timer) {
+      app_timer_cancel(s_render_timer);
+      s_render_timer = NULL;
+    }
+  }
+}
+
+void pge_resume() {
+  if(s_is_paused) {
+    s_is_paused = false;
+    s_render_timer = app_timer_register(1000 / s_framerate, frame_timer_handler, NULL);
+  }
+}
+
+bool pge_is_paused() {
+  return s_is_paused;
+}
+
 /************************* Engine Internal Functions **************************/
+
+static void count_framerate() {
+  time_t now = time(NULL);
+  if(now - s_last_report > PGE_FRAMERATE_INTERVAL_S) {
+    s_last_report = now;
+    s_avg_framerate = s_frame_counter / PGE_FRAMERATE_INTERVAL_S;
+    s_frame_counter = 0;
+  } else {
+    s_frame_counter++;
+  }
+}
 
 static void game_window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
@@ -138,6 +184,7 @@ static void draw_frame_update_proc(Layer *layer, GContext *ctx) {
   if(s_logic_handler != NULL && s_render_handler != NULL) {
     s_render_handler(ctx);
     s_logic_handler();
+    count_framerate();
   } else {
     APP_LOG(APP_LOG_LEVEL_ERROR, "Loop or Render handler not set!");
   }
