@@ -9,7 +9,7 @@ typedef struct {
   Vec3 position;
   GSizeSmall size;
   GColor color;
-} Block;
+} __attribute__((__packed__)) Block;
 
 Block* block_create(Vec3 vec, GSize size, GColor color);
 

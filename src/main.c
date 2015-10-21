@@ -335,15 +335,18 @@ void pge_init() {
   generate_world();
 
   // Set up engine
-  pge_isometric_set_projection_offset(GPoint(70, 80));
+  pge_isometric_set_projection_offset(PBL_IF_ROUND_ELSE(GPoint(90, 110), GPoint(72, 80)));
   pge_isometric_set_enabled(true);
   pge_set_framerate(FRAME_RATE_IDLE);
   pge_begin(GColorBlack, logic, render, click);
   s_main_window = pge_get_window();
 
-  s_status_layer = text_layer_create(GRect(0, 0, 144, 16));
+  s_status_layer = text_layer_create(grect_inset(
+    layer_get_bounds((window_get_root_layer(s_main_window))),
+    PBL_IF_ROUND_ELSE(GEdgeInsets(30, 0, 130, 0), GEdgeInsets(0, 0, 150, 0))));
   text_layer_set_background_color(s_status_layer, GColorBlack);
   text_layer_set_text_color(s_status_layer, GColorWhite);
+  text_layer_set_text_alignment(s_status_layer, PBL_IF_ROUND_ELSE(GTextAlignmentCenter, GTextAlignmentLeft));
   layer_add_child(window_get_root_layer(s_main_window), text_layer_get_layer(s_status_layer));
   update_status_text();
 

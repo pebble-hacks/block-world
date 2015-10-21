@@ -19,8 +19,8 @@ typedef struct {
 } __attribute__((__packed__)) GSizeSmall;
 
 // Map settings
-#define GRID_WIDTH 16
-#define GRID_HEIGHT 16
+#define GRID_WIDTH 14
+#define GRID_HEIGHT 14
 #define GRID_DEPTH 14
 #define BLOCK_SIZE 5
 #define FRAME_RATE_IDLE 25
